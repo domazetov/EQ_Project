@@ -1,0 +1,21 @@
+**** my_IP - predstavlja jezgro koje radi kao množač. 
+{
+	Na ulazu prima rezultate obrađenih audio odbiraka sa FFT-a u frekvencionom domenu. 	
+	Takođe prima 2 tipa parametara, P - pojačanja (10 vrednosti fiksno), PR - pragovi (9 vrednosti fiksno).
+	
+	Ideja jezgra je da pojačava/smanjuje ulazni zvuk u frekvencijskom domenu. 
+	U DEFAULT stanju podešenih početnih parametara jezgro obađuje 1024 odbirka signla. Realni i imaginarni deo se množe paralelno. 
+	512 odbirka predstavljaju frekvencije od 0-22050 Hz zato što radimo sa frekvencijom odabiranja od 44100Hz kako bi reprezentovali deo spektra zvuka koji se može čuti.
+	Ovaj opseg frekvencije podeljen je na 10 manjih opsega. 
+	PR predstavljaju gornje granice opsega a P pojačanja za svaki opseg.
+	
+	Jezgro radi tako da je u početku podešeno na P[0] koje odgovara pojačanju prvog opsega i dalje jezgro prolazi redom kroz odbirke množeći ih tim pojačanjem dok ne naiđe na PR[0] kada menja pojačanje na P[1] i nastavi da množi odbirke sa P[1].
+	Ovaj proces se odvija dok se ne pomnože svih 10 opsega od 512 odbiraka sa odgovarajućim pojačanjima. 
+	Dalje se proces odvija u suprotnom smeru dok se ne dođe do 1024 odbirka kako bi se dobio simetričan odziv u odnosu na 512.
+
+	Rezultat jezgra je formiran tako da bude kompatibilan obradi IFFTa.
+
+	U DEFAULT stanju podešenih početnih parametara podatci odbiraka signala su predstavljeni sa 24 bita. 
+	Koristi se fiksna reprezentacija sa 1 celobrojnim i 23 razlomljena u formatu komplent dvojke za predstavu negativnih vrednosti.  
+	Takođe na ulazu/izlazu su podatci koji se kreću AXI STREAM protokolom u formatu od 48 bita koji predstavljaju spojenu realnu i imaginarnu komponentu. 	 		
+}  
