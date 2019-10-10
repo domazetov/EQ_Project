@@ -36,7 +36,7 @@ end init;
 architecture Behavioral of init is
 begin
     
-    s_axis_config_tdata_fft <= x"0aaaab";
+    s_axis_config_tdata_fft <= x"000003";
     s_axis_config_tdata_ifft <= x"0aaaaa";
     s_axis_config_tvalid_fft <= '1';
     s_axis_config_tvalid_ifft <= '1';

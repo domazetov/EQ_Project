@@ -199,9 +199,12 @@ begin
        case state_reg is
            when idle =>
                mux1 <= (others => '0');
+               mux2 <= (others => '0');
+               mux3 <= (others => '0');
            when st_0000 =>
                mux1 <= signed(p1(AMPLIFICATION_WIDTH-1 downto 0));
                mux2 <= unsigned(pr1(BOUNDARIES_WIDTH-1 downto 0));
+               mux3 <= (others => '0');
            when st_0001 =>
                mux1 <= signed (p2(AMPLIFICATION_WIDTH-1 downto 0));
                mux2 <= unsigned (pr2(BOUNDARIES_WIDTH-1 downto 0));
@@ -236,6 +239,7 @@ begin
                mux3 <= unsigned (pr8(BOUNDARIES_WIDTH-1 downto 0));
            when st_1001 =>
                mux1 <= signed (p10(AMPLIFICATION_WIDTH-1 downto 0));
+               mux2 <= (others => '0');
                mux3 <= unsigned (pr9(BOUNDARIES_WIDTH-1 downto 0));
       end case;
     end process; 
