@@ -17,6 +17,9 @@ create_project pkg_data_helper ..\/..\/result\/data_helper -part xc7z010clg400-1
 
 # KORAK#2: Ukljucivanje svih izvornih fajlova u projekat
 add_files -norecurse ..\/hdl\/data_helper.v
+
+set_property file_type SystemVerilog [get_files ..\/hdl\/data_helper.v]
+
 update_compile_order -fileset sources_1
 
 # KORAK#3: Pokretanje procesa sinteze
@@ -30,6 +33,7 @@ puts "*****************************************************"
 update_compile_order -fileset sources_1
 ipx::package_project -root_dir ..\/..\/ -vendor xilinx.com -library user -taxonomy /UserIP -force
 
+
 set_property vendor FTN [ipx::current_core]
 set_property name data_helper [ipx::current_core]
 set_property display_name data_helper-1.0 [ipx::current_core]
@@ -38,6 +42,8 @@ set_property company_url http://www.ftn.uns.ac.rs [ipx::current_core]
 set_property vendor_display_name FTN [ipx::current_core]
 set_property taxonomy {/UserIP} [ipx::current_core]
 set_property supported_families {zynq Production} [ipx::current_core]
+
+ipx::associate_bus_interfaces -busif pi_sts -clock S_AXI_ACLK [ipx::current_core]
 
 set_property core_revision 2 [ipx::current_core]
 ipx::create_xgui_files [ipx::current_core]

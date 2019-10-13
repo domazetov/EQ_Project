@@ -21,7 +21,7 @@ add_files -norecurse ..\/hdl\/equalizer_core.vhd
 add_files -norecurse ..\/hdl\/axi_equalizer_stream_slave.vhd
 add_files -norecurse ..\/hdl\/axi_equalizer_stream_master.vhd
 add_files -norecurse ..\/hdl\/axi_equalizer_lite.vhd
-add_files -norecurse ..\/hdl\/axi_equalizer_top.vhd
+add_files -norecurse ..\/hdl\/equalizer_top.vhd
 
 update_compile_order -fileset sources_1
 
@@ -34,6 +34,7 @@ puts "*****************************************************"
 
 # KORAK#4: Pakovanje Jezgra
 update_compile_order -fileset sources_1
+
 ipx::package_project -root_dir ..\/..\/ -vendor xilinx.com -library user -taxonomy /UserIP -force
 
 set_property vendor FTN [ipx::current_core]
@@ -44,6 +45,12 @@ set_property company_url http://www.ftn.uns.ac.rs [ipx::current_core]
 set_property vendor_display_name FTN [ipx::current_core]
 set_property taxonomy {/UserIP} [ipx::current_core]
 set_property supported_families {zynq Production} [ipx::current_core]
+
+ipx::infer_bus_interface {s00_axil_awaddr s00_axil_awvalid s00_axil_awready s00_axil_wdata s00_axil_wvalid s00_axil_wready s00_axil_bvalid s00_axil_bready} xilinx.com:interface:aximm_rtl:1.0 [ipx::current_core]
+ipx::associate_bus_interfaces -busif m00_axis -clock axi_aclk [ipx::current_core]
+ipx::associate_bus_interfaces -busif s01_axis -clock axi_aclk [ipx::current_core]
+ipx::associate_bus_interfaces -busif s00_axil -clock axi_aclk [ipx::current_core]
+
 
 set_property core_revision 2 [ipx::current_core]
 ipx::create_xgui_files [ipx::current_core]

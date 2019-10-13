@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 --use work.utils_pkg.all;
 
-entity axi_equalizer_top is
+entity equalizer_top is
 	generic (
 		DATA_WIDTH         : integer := 24;
 		AMPLIFICATION_WIDTH   :integer := 24;
@@ -38,9 +38,9 @@ entity axi_equalizer_top is
         axi_aclk : in std_logic;
         axi_aresetn : in std_logic
 	);
-end axi_equalizer_top;
+end equalizer_top;
 
-architecture arch_imp of axi_equalizer_top is
+architecture arch_imp of equalizer_top is
 
 signal reset_s : std_logic;
 signal reg_data_s : std_logic_vector(C_S00_AXIL_DATA_WIDTH-1 downto 0);   

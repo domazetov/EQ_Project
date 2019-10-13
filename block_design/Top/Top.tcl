@@ -18,9 +18,9 @@ set ip_repo_path [getScriptDirectory]\/..\/
 file mkdir $resultDir
 
 # CONNECT SYSTEM
-create_project Equalizer $resultDir  -part xc7z010clg400-1 -force
+create_project Equalizer_BD $resultDir  -part xc7z010clg400-1 -force
 set_property BOARD_PART digilentinc.com:zybo-z7-10:part0:1.0 [current_project]
-create_bd_design "Equalizer"
+create_bd_design "Equalizer_BD"
 update_compile_order -fileset sources_1
 #add ip-s to main repo
 set_property  ip_repo_paths  $ip_repo_path [current_project]
@@ -502,7 +502,7 @@ set_property -dict [ list \
    CONFIG.PCW_USE_S_AXI_HP0 {1} \
  ] [get_bd_cells processing_system7_0]
 
-apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Enable" Slave "Disable" }  [get_bd_cells processing_system7_0]
+apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells processing_system7_0]
 
 # Create ports
 
@@ -631,21 +631,23 @@ apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_ex
   # Create address segments
   create_bd_addr_seg -range 0x40000000 -offset 0x00000000 [get_bd_addr_spaces axi_datamover_0/Data_MM2S] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] SEG_processing_system7_0_HP0_DDR_LOWOCM
   create_bd_addr_seg -range 0x40000000 -offset 0x00000000 [get_bd_addr_spaces axi_datamover_0/Data_S2MM] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] SEG_processing_system7_0_HP0_DDR_LOWOCM
-  create_bd_addr_seg -range 0x00010000 -offset 0x43C20000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs Equalizer/s00_axil/reg0] SEG_Equalizer_reg0
+  create_bd_addr_seg -range 0x00010000 -offset 0x43C20000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs Equalizer/s00_axil/Reg] SEG_Equalizer_Reg
+
   create_bd_addr_seg -range 0x00010000 -offset 0x43C00000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs data_helper_0/S_AXI/reg0] SEG_data_helper_0_reg0
   create_bd_addr_seg -range 0x00010000 -offset 0x43C10000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs data_helper_1/S_AXI/reg0] SEG_data_helper_1_reg0
 
+#  save_bd_design
 
 #validating design
 validate_bd_design
 #Creating hdl wrapper
-make_wrapper -files [get_files $resultDir/Equalizer.srcs/sources_1/bd/Equalizer/Equalizer.bd] -top
-add_files -norecurse $resultDir/Equalizer.srcs/sources_1/bd/Equalizer/hdl/Equalizer_wrapper.v
+make_wrapper -files [get_files $resultDir/Equalizer_BD.srcs/sources_1/bd/Equalizer_BD/Equalizer_BD.bd] -top
+add_files -norecurse $resultDir/Equalizer_BD.srcs/sources_1/bd/Equalizer_BD/hdl/Equalizer_BD_wrapper.v
 #running synthesis and implementation
 launch_runs impl_1 -to_step write_bitstream -jobs 6
 
 #exporting hardware
 wait_on_run impl_1
 update_compile_order -fileset sources_1
-file mkdir $resultDir/Equalizer.sdk
-file copy -force $resultDir/Equalizer.runs/impl_1/Equalizer_wrapper.sysdef $resultDir/Equalizer.sdk/Equalizer_wrapper.hdf
+file mkdir $resultDir/Equalizer_BD.sdk
+file copy -force $resultDir/Equalizer_BD.runs/impl_1/Equalizer_BD_wrapper.sysdef $resultDir/Equalizer_BD.sdk/Equalizer_BD_wrapper.hdf
